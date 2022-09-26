@@ -53,9 +53,45 @@ def get_user_by_id(id_user):
 def get_user_by_number(id_number):
     conn = get_db_connecter()
     cur = conn.cursor()
-    cur.execute("""SELECT * FROM orangee WHERE mssisdn = %s """, (id_number,))
+    cur.execute("""SELECT * FROM orangee WHERE msisdn_sans_indicatif = %s """, (id_number,))
     response = cur.fetchone()
-    return jsonify(response)    
+    return jsonify(response) 
+
+# api pour les personnes qui ont payé par orange money
+@app.route('/pay_by_orange_money')
+def get_user_by_orange_money():
+    co = get_db_connecter()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM orangee where payment_mode like 'ORANGEMONEY';")
+    data = cur.fetchall()
+    return data ;
+
+# api pour les personnes qui ont payé par mobile web
+@app.route('/pay_by_mobile_web')
+def get_user_by_mobile_web():
+    co = get_db_connecter()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM orangee where interface like 'MOBILE_WEB';")
+    data = cur.fetchall()
+    return data ;
+
+# apir pour les personnes qui ont payé par android
+@app.route('/pay_by_android')
+def get_user_by_android():
+    co = get_db_connecter()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM orangee where interface like 'ANDROID';")
+    data = cur.fetchall()
+    return data ;
+
+# api pour les personnes qui ont payé par orange money et par mobile web
+@app.route('/pay_by_orange_and_mobile_web')
+def get_user_by_orange_and_mobile_web():
+    co = get_db_connecter()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM orangee where payment_mode like 'ORANGEMONEY' and interface like 'MOBILE_WEB';")
+    data = cur.fetchall()
+    return data ;        
 
 if __name__ == '__main__' :
     app.run(debug=True)
