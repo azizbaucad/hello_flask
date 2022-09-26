@@ -85,13 +85,22 @@ def get_user_by_android():
     return data ;
 
 # api pour les personnes qui ont payé par orange money et par mobile web
-@app.route('/pay_by_orange_and_mobile_web')
-def get_user_by_orange_and_mobile_web():
+@app.route('/client_qui_ont_payer_par_OM')
+def get_all_user_by_om():
     co = get_db_connecter()
     cur = co.cursor()
-    cur.execute("SELECT * FROM orangee where payment_mode like 'ORANGEMONEY' and interface like 'MOBILE_WEB';")
+    cur.execute("SELECT COUNT(payment_mode) FROM orangee where payment_mode in('ORANGEMONEY') Group by payment_mode ;")
     data = cur.fetchall()
-    return data ;        
+    return data ;
+
+# api pour les nombres personnes qui ont payé par android
+@app.route('/client_qui_ont_payer_par_ANDROID')
+def get_all_user_by_android():
+    co = get_db_connecter()
+    cur = co.cursor()
+    cur.execute("SELECT COUNT(interface) FROM orangee where interface in('ANDROID') Group by interface;")
+    data = cur.fetchall()
+    return data ;              
 
 if __name__ == '__main__' :
     app.run(debug=True)
